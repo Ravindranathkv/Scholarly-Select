@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ScholarlySelect</title>
+	<!-- TAMU logo -->
+	<img src="tamu_logo.png" alt="TAMU logo" class="logo">
+	<style>
+		/* Style the menu bar */
+		ul {
+			list-style-type: none;
+			margin: 0;
+			padding: 0;
+			overflow: hidden;
+			background-color: #500000;
+		}
+
+		/* Style the menu bar links */
+		li {
+			float: left;
+		}
+
+		li a {
+			display: block;
+			color: white;
+			text-align: center;
+			padding: 14px 16px;
+			text-decoration: none;
+		}
+
+		li a:hover {
+			background-color: #800000;
+		}
+
+		/* Style the TAMU logo */
+		.logo {
+			float: left;
+			margin: 10px;
+			height: 50px;
+		}
+
+		/* Style the page content */
+		.content {
+			margin-top: 50px;
+			margin-left: 20px;
+			margin-right: 20px;
+		}
+
+		/* Style the page headings */
+		h1 {
+			color: #500000;
+			font-size: 36px;
+			margin-top: 20px;
+			margin-bottom: 10px;
+		}
+
+		/* Style the page paragraphs */
+		p {
+			font-size: 18px;
+			line-height: 1.5;
+			margin-bottom: 20px;
+		}
+
+		/* Hide all sections except the introduction section */
+		section:not(#introduction) {
+			display: none;
+		}
+		.container {
+			display: flex;
+			flex-wrap: wrap;
+		}
+		.column1 {
+			width: 50%;
+			padding-right: 20px;
+		}
+		.column2 {
+			width: 50%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+		.column2 img {
+			max-width: 100%;
+			height: auto;
+		}
+	</style>
+</head>
+<body>
+	
+	<!-- Menu bar -->
+	<ul>
+		<li><a href="#introduction" onclick="showSection('introduction')">Introduction</a></li>
+		<li><a href="#proposed_solution" onclick="showSection('proposed_solution')">Proposed Solution</a></li>
+		<li><a href="#approach" onclick="showSection('approach')">Approach</a></li>
+		<li><a href="#evaluation" onclick="showSection('evaluation')">Evaluation and Analysis</a></li>
+		<li><a href="#conclusions" onclick="showSection('conclusions')">Conclusions</a></li>
+	</ul>
+
+	<!-- Page content -->
+	<div class="content">
+		<!-- Introduction section -->
+		<section id="introduction">
+			<h1>Introduction</h1>
+			<p>We present Scholarly Select, Scholar Recommendation System for students and co-author search for scholars using Information Retrieval & NLP based on the scholar’s research profile. Finding a suitable  Scholar for a relevant query by searching each professor on TAMU is a  time-consuming task. Scholarly Select entails analyzing a set of  Scholars, their background, overview, publication titles and publications to evaluate the most appropriate one  or group of relevant scholars. It also can suggest the potential co-authors for scholars to work upon.
+			</p>
+			<p>The scholar's information is automatically extracted from SCHOLARS@TAMU  (scholars.tamu.edu) using the VIVO API. All the relevant  details are captured for building a text-based recommendation model. The  depth and breadth of research activities undertaken by university scholars i.e.,  publications, research activities, awards & grants as well as their educational  background, are considered when developing the recommendation list of scholars.  The recommendation engine is built based on analyzing the scholar features for all the scholars at TAMU. Natural language  processing, data mining, information retrieval, and statistical analysis are used  together to classify and recommend the appropriate Scholar automatically.
+			</p>
+		</section>
+
+		<!-- Proposed Solution section -->
+		<section id="proposed_solution">
+			<h1>Proposed Solution</h1>
+			<div style="display: flex; flex-direction: row; align-items: center;">
+				<div style="flex-basis: 50%;">
+					<h2>Data Extraction:</h2>
+					<p>The scholar's database is accessed through the Vivo API to extract the people's information in JSON format. Academic background, Publications, Patents, Grants/Awards, Teaching, Overview, and other relevant information  are extracted based on their previous and current work. Using publication IDs, publication abstracts, titles, citations, and references are extracted over the past 10 years  to identify the relations between authors and co-authors
+					</p>
+					<br>
+					<h2>Data PreProcessing:</h2>
+					<p>Text data has noise in forms such as punctuations, numbers, conjunctions, and pronouns, as using counter  cosine similarity all the words in the corpus will be considered to calculate the similarity. Regular expressions and NLTK libraries are used to perform tasks like NER, removing stop words,  lemmatization, punctuations, and special characters removal. POS tagging is to be done to extract Proper Nouns, Adjectives, and Nouns
+					</p>
+					<br>
+					<h2>Keyword Extraction:</h2>
+					<p>To avoid unrelated terms from the corpus, an auto keyword extraction module is added to the pipeline, and  keywords are extracted. Pre-built approaches like Spacy, BERT, Rake, Yake, and NLTK are used to extract the top N keywords based on  the size of the phrase/sentence
+					</p>
+					<br>
+					<h2>Data Preparation and Zero-Shot Classification:</h2>
+					<p>Processed and cleaned scholar’s data is created based on user features and preferences. A total of ~5000  scholars at TAMU are used to create the master data. Scholars extracted are classified using a zero-shot classification approach using Bert-large-mini pre-trained model. Zero-shot learning does not require a huge amount of labeled data, their recognition system relies on the  availability of labeled data, and knowledge gained of unseen classes is semantically related to seen classes. Participating organizations which include institutes and departments for participating grants are used to identify  the multi-disciplinary departments across all the topic areas and departments
+					</p>
+				</div>
+				<div style="flex-basis: 50%; text-align: center;">
+					<img src="Flowchart.jpg" alt="Flowchart" style="max-width: 50vw;">
+				</div>
+			</div>
+			<br>
+		</section>
+		
+		<!-- Approach section -->
+		<section id="approach">
+			<h1>Approach</h1>
+			<div style="display: flex; flex-direction: row; align-items: center;">
+				<div style="flex-basis: 50%;">
+					<h2>Approach1: Conventional approach using Counter Cosine Similarity with word tokens</h2>
+					<p>Counter cosine similarity with vectorization is used to determine the relevant federal grants for each scholar. Scholar’s overview, publication-related text, academic background, and the grant’s description, organizations,  and title are tokenized to get the processed keywords. The similarity calculation is literally the keyword matching across all the one-to-one feature mapping from  scholar’s features to grant features. Scholar features - {s1, s2, s3, …} Grant features - {g1, g2, g3, …}. Combined features for count vectorizer cosine similarity - {(s1,g1), (s1, g2), (s1, g3), (s1,.),...(s2,g1), (s2g2), …… ,  (sn,gm)}. Feature level thresholds are used to identify similar features and a combined similarity score is used to identify the  top N proposal grants for each scholar</p>
+					<h2>Approach2: Transformers with a paraphrase-MiniLM-  L6-v2 pre-trained model</h2>
+					<p>Tokenizer (AutoTokenizer) and Model (AutoModel) are used to  retrieve the sentence-transformer/paraphrase-MiniLM-L6-v2. SBERT adds a pooling operation to the BERT output to derive  fixed-sized sentence embeddings. The pre-trained SBERT  model is used to extract the phrase embeddings. Using the output of the CLS-token, computing the mean of all  output vectors, and computing a max-over-time of the output  vectors (MAX-strategy). Mean pooling is used in the transform method to infer a vector  for each word and average from each sentence.</p>
+				</div>
+				<div style="flex-basis: 50%; text-align: center;">
+					<img src="sbert.png" alt="SBERT" width="50%" height="50%">
+				</div>
+			</div>
+		</section>
+		
+		<!-- Evaluation and Analysis section -->
+		<section id="evaluation">
+			<h1>Evaluation and Analysis</h1>
+			<p>When evaluating recommended scholars, there are several challenges to consider. Firstly, it can be difficult to determine the appropriate order of the recommended scholars, as we may not fully understand the user's intentions or motivations behind the query. Secondly, there may be some loss of information in the query input by the user, which can further complicate the evaluation process.
+			</p>
+			<p>To address these challenges, we propose a simple evaluation approach based on relevance scoring. Specifically, we will check if each recommended scholar is relevant to the same department as the query (assuming the query pertains to a single department only). We will then assign a relevance score of 1 if the scholar is relevant, or 0 if they are not.
+			</p>
+			<p>With the relevance scores calculated, we can then use standard evaluation metrics such as NDCG and Precision@k to assess the quality of the recommendations. This approach provides a straightforward and effective way to evaluate the relevance of recommended scholars, while accounting for the inherent challenges in the recommendation process.</p>
+			</p>
+		</section>
+
+		<!-- Conclusions section -->
+		<section id="conclusions">
+			<h1>Results & Conclusions</h1>
+			<p>Result for top scholar recommendations for Query: "How can machine learning and artificial intelligence be used to analyze large biomedical datasets and develop personalized treatment plans?"</p>
+			<img src="Query.png" alt="QUERY" width="50%" height="50%">
+			<p>Result for top co-author recommendations for Prof. James Caverlee</p>
+			<img src="Co-author.png" alt="Co-Author" width="50%" height="50%">
+			<h2>Future Scope of project</h2>
+			<p>Currently limited to Texas A&M University scholars, the product can to be expanded through collaboration  with other universities. Allow scholars to identify other researchers for collaboration toward a particular project. A Scholar Recommendation System for students can be effectively and efficiently implemented at TAMU.
+</p>
+		</section>
+	</div>
+
+	<script>
+		function showSection(sectionId) {
+			document.querySelectorAll('section').forEach(section => section.style.display = 'none');
+			document.querySelector(`#${sectionId}`).style.display = 'block';
+		}
+
+		// Show only the introduction section by default
+		showSection('introduction');
+	</script>
+</body>
+</html>
